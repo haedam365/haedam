@@ -47,7 +47,6 @@
         .reading-section h3 { margin: 0 0 10px 0; font-size: 16px; color: #8b2626; border-bottom: 1px dashed #e5e0d8; padding-bottom: 5px; }
         .reading-text { font-size: 14.5px; line-height: 1.6; color: #333; text-align: justify; word-break: break-all; }
         .cta-btn { background: linear-gradient(135deg, #8b2626, #5c1818); color: #fff; border: 1px solid #c5a059; width: 100%; padding: 18px; border-radius: 12px; font-size: 17px; font-weight: 700; margin-top: 10px; cursor: pointer; }
-        @media screen and (max-width: 380px) { .neon-hangul { font-size: 24px; } .grid-cell { padding: 8px 1px; } .col-header { font-size: 11px; } }
     </style>
 </head>
 <body>
@@ -82,6 +81,7 @@
     const ohaengMap = { '甲': { hg: '갑', el: '목', type: '+목', class: 'wood' }, '乙': { hg: '을', el: '목', type: '-목', class: 'wood' }, '丙': { hg: '병', el: '화', type: '+화', class: 'fire' }, '丁': { hg: '정', el: '화', type: '-화', class: 'fire' }, '戊': { hg: '무', el: '토', type: '+토', class: 'earth' }, '己': { hg: '기', el: '토', type: '-토', class: 'earth' }, '庚': { hg: '경', el: '금', type: '+금', class: 'metal' }, '辛': { hg: '신', el: '금', type: '-금', class: 'metal' }, '壬': { hg: '임', el: '수', type: '+수', class: 'water' }, '癸': { hg: '계', el: '수', type: '-수', class: 'water' }, '子': { hg: '자', el: '수', type: '-수', class: 'water' }, '丑': { hg: '축', el: '토', type: '-토', class: 'earth' }, '寅': { hg: '인', el: '목', type: '+목', class: 'wood' }, '卯': { hg: '묘', el: '목', type: '-목', class: 'wood' }, '辰': { hg: '진', el: '토', type: '+토', class: 'earth' }, '巳': { hg: '사', el: '화', type: '+화', class: 'fire' }, '午': { hg: '오', el: '화', type: '-화', class: 'fire' }, '未': { hg: '미', el: '토', type: '-토', class: 'earth' }, '申': { hg: '신', el: '금', type: '+금', class: 'metal' }, '酉': { hg: '유', el: '금', type: '-금', class: 'metal' }, '戌': { hg: '술', el: '토', type: '+토', class: 'earth' }, '亥': { hg: '해', el: '수', type: '+수', class: 'water' } };
     function getShipseong(dsh, th) { if (!dsh || !th || th === '?') return ''; if (dsh === th) return '비견'; const me = ohaengMap[dsh], target = ohaengMap[th]; if (!me || !target) return ''; const els = { '목': 0, '화': 1, '토': 2, '금': 3, '수': 4 }; const diff = (els[target.el] - els[me.el] + 5) % 5; const isSame = (me.type.charAt(0) === target.type.charAt(0)); const map = { 0: isSame ? '비견' : '겁재', 1: isSame ? '식신' : '상관', 2: isSame ? '편재' : '정재', 3: isSame ? '편관' : '정관', 4: isSame ? '편인' : '정인' }; return map[diff]; }
     function renderChar(hanja) { if (!hanja || hanja === '?' || !ohaengMap[hanja]) return `<div class="char-container unknown"><span class="neon-hangul">?</span></div>`; const data = ohaengMap[hanja]; return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`; }
+    
     async function fetchRealSajuReading(name, dayStem, relationship, concern, sajuData) {
         try {
             document.getElementById('loading-msg').textContent = "AI가 명식을 분석 중입니다...";
@@ -101,30 +101,48 @@
             window.scrollTo(0, 0);
         } catch (error) {
             console.error(error);
-            alert('AI 분석 중 문제가 발생했습니다. (버셀 환경변수 설정을 확인해 보세요.)');
+            alert('AI 분석 중 문제가 발생했습니다.');
             location.reload();
         }
     }
+
     document.getElementById('saju-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('name').value;
-        const y = document.getElementById('birth-year').value;
-        const m = document.getElementById('birth-month').value.padStart(2, '0');
-        const d = document.getElementById('birth-day').value.padStart(2, '0');
-        const time = document.getElementById('birth-time').value;
+        const year = parseInt(document.getElementById('birth-year').value);
+        const month = parseInt(document.getElementById('birth-month').value);
+        const day = parseInt(document.getElementById('birth-day').value);
+        const birthTimeStr = document.getElementById('birth-time').value;
         const calendar = document.querySelector('input[name="calendar"]:checked').value;
         const relationship = document.querySelector('input[name="relationship"]:checked').value;
         const concern = document.getElementById('concern').value;
+
         document.getElementById('input-screen').style.display = 'none';
         document.getElementById('loading-screen').style.display = 'block';
-        const calcTime = time === 'unknown' ? '12:00' : time;
-        let inputDate = new Date(`${y}-${m}-${d}T${calcTime}:00`);
-        if (time !== 'unknown') inputDate.setMinutes(inputDate.getMinutes() - 30);
+
         try {
-            const bazi = calendar === 'solar' ? Solar.fromYmdHms(inputDate.getFullYear(), inputDate.getMonth() + 1, inputDate.getDate(), inputDate.getHours(), inputDate.getMinutes(), 0).getLunar().getEightChar() : Lunar.fromYmdHms(inputDate.getFullYear(), calendar === 'leap' ? -(inputDate.getMonth() + 1) : (inputDate.getMonth() + 1), inputDate.getDate(), inputDate.getHours(), inputDate.getMinutes(), 0).getEightChar();
-            const [yh, mh, dh] = [bazi.getYear(), bazi.getMonth(), bazi.getDay()];
-            const th = time === 'unknown' ? ['?', '?'] : bazi.getTime();
+            let hour = 12, min = 0;
+            if (birthTimeStr !== 'unknown') {
+                [hour, min] = birthTimeStr.split(':').map(Number);
+            }
+
+            // 만세력 계산
+            let bazi;
+            if (calendar === 'solar') {
+                const solar = Solar.fromYmdHms(year, month, day, hour, min, 0);
+                bazi = solar.getLunar().getEightChar();
+            } else {
+                const isLeap = (calendar === 'leap');
+                const lunar = Lunar.fromYmdHms(year, isLeap ? -month : month, day, hour, min, 0);
+                bazi = lunar.getEightChar();
+            }
+
+            const yh = bazi.getYear();
+            const mh = bazi.getMonth();
+            const dh = bazi.getDay();
+            const th = birthTimeStr === 'unknown' ? ['?', '?'] : bazi.getTime();
             const dStem = dh[0];
+
             document.getElementById('result-name').textContent = name;
             ['t', 'd', 'm', 'y'].forEach((p, i) => {
                 const ts = [th[0], dStem, mh[0], yh[0]][i];
@@ -134,10 +152,19 @@
                 document.getElementById(`${p}-stem`).innerHTML = renderChar(ts);
                 document.getElementById(`${p}-branch`).innerHTML = renderChar(tb);
             });
-            fetchRealSajuReading(name, dStem, relationship, concern, { year: yh, month: mh, day: dh, time: th.join('') });
+
+            const sajuPayload = { 
+                year: yh.split(''), 
+                month: mh.split(''), 
+                day: dh.split(''), 
+                time: Array.isArray(th) ? th : th.split('') 
+            };
+            
+            fetchRealSajuReading(name, dStem, relationship, concern, sajuPayload);
+
         } catch (err) {
             console.error(err);
-            alert('계산 중 오류가 발생했습니다.');
+            alert('계산 중 오류가 발생했습니다. 생년월일을 다시 확인해주세요.');
             location.reload();
         }
     });
