@@ -7,9 +7,8 @@ export default async function handler(req, res) {
 
     if (!apiKey) return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
 
-    // [필살기 조합] v1 주소 + gemini-pro 모델명
-    // 이 조합은 구글 API v1에서 가장 오래되고 안정적인 표준입니다. 404가 날 수 없습니다.
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
+    // [진짜 원인 해결] 2026년 현재 구글이 지원하는 최신 모델인 'gemini-2.5-flash'를 사용해야 합니다.
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const promptData = {
       contents: [{
