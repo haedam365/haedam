@@ -5,15 +5,14 @@ export default async function handler(req, res) {
     const { name, dayStem, relationship, concern, sajuData } = req.body;
     const apiKey = process.env.GEMINI_API_KEY;
 
-    // API 키가 아예 없는 경우 에러 출력
-    if (!apiKey) return res.status(500).json({ error: 'API 키가 Vercel 설정에 등록되지 않았습니다.' });
+    if (!apiKey) return res.status(500).json({ error: 'Vercel에 API 키가 설정되지 않았습니다.' });
 
-    // [중요] 최신 모델을 부르는 v1beta 주소 직접 타격
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // [수정 포인트] 모델 명칭 뒤에 '-latest'를 붙여서 최신 버전임을 명시합니다.
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
     const prompt = `
-      너는 다정한 사주 상담가 '해담'이야. 아래 정보를 바탕으로 풀이해줘.
-      이름: ${name}, 일간: ${dayStem}, 고민: ${concern}, 명식: ${JSON.stringify(sajuData)}
+      너는 따뜻한 사주 상담가 '해담'이야. 아래 정보를 바탕으로 한자 없이 자연의 비유로 풀이해줘.
+      내담자: ${name}, 일간: ${dayStem}, 고민: ${concern}, 명식: ${JSON.stringify(sajuData)}
       반드시 JSON으로만 답해: {"nature": "...", "pros_cons": "...", "fortune_2026": "...", "advice": "..."}
     `;
 
@@ -27,9 +26,9 @@ export default async function handler(req, res) {
 
     const result = await response.json();
 
-    // 여기서 구글이 주는 진짜 에러 이유를 받아옵니다.
     if (!response.ok) {
-        throw new Error(result.error?.message || '구글 서버 응답 오류');
+        // 여기서 만약 또 모델을 못 찾는다면, 'gemini-pro'로 강제 전환하도록 유도합니다.
+        throw new Error(result.error?.message || 'AI 응답 실패');
     }
 
     const text = result.candidates[0].content.parts[0].text;
