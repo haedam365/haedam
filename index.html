@@ -257,6 +257,7 @@
             document.getElementById('result-screen').style.display = 'block';
 
         } catch (error) {
+            console.error("AI API 에러:", error);
             alert('AI 풀이를 가져오는 중 문제가 발생했습니다. (버셀 세팅 전이라면 에러가 납니다.)');
             document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('input-screen').style.display = 'block';
@@ -305,12 +306,15 @@
                 document.getElementById(`${p}-branch`).innerHTML = renderChar(targetBranch);
             });
             
-            const sajuData = { year: yearH.join(''), month: monthH.join(''), day: dayH.join(''), time: timeH.join('') };
+            // ★ 바로 이 부분의 문법 오류를 수정했습니다!
+            const timeStr = typeof timeH === 'string' ? timeH : timeH.join('');
+            const sajuData = { year: yearH, month: monthH, day: dayH, time: timeStr };
             
-            // 여기서 AI 백엔드 API 호출 (1단계에서 만든 서버로 전송)
+            // 여기서 AI 백엔드 API 호출
             fetchRealSajuReading(name, dayStem, relationship, concern, sajuData);
             
         } catch (error) { 
+            console.error("날짜 계산 에러:", error);
             alert('날짜 계산 중 오류가 발생했습니다.'); 
             document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('input-screen').style.display = 'block';
