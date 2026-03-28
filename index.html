@@ -124,7 +124,6 @@
         <h1>내담자정보</h1>
         <form id="saju-form">
             <div class="form-group"><label>이름</label><input type="text" id="name" placeholder="이름을 입력하세요" required></div>
-            
             <div class="form-group">
                 <label>성별</label>
                 <div class="radio-group" style="margin-bottom: 12px;">
@@ -132,7 +131,6 @@
                     <label><input type="radio" name="gender" value="f"> <span>여성</span></label>
                 </div>
             </div>
-            
             <div class="form-group">
                 <label>달력 구분</label>
                 <div class="radio-group" style="margin-bottom: 12px;">
@@ -141,7 +139,6 @@
                     <label><input type="radio" name="calendar" value="leap"> <span>윤달</span></label>
                 </div>
             </div>
-            
             <div class="form-group">
                 <label>생년월일</label>
                 <div class="date-inputs">
@@ -150,7 +147,6 @@
                     <input type="number" id="birth-day" placeholder="1" min="1" max="31" required> <span>일</span>
                 </div>
             </div>
-            
             <div class="form-group">
                 <label>태어난 시간</label>
                 <select id="birth-time" required>
@@ -169,7 +165,6 @@
                     <option value="22:30">해시 (21:30 ~ 23:29)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>현재 연애상태</label>
                 <div class="radio-group">
@@ -180,12 +175,10 @@
                     <label><input type="radio" name="relationship" value="돌싱"> <span>돌싱</span></label>
                 </div>
             </div>
-
             <div class="form-group">
                 <label>현재 고민</label>
                 <textarea id="concern" placeholder="어떤 고민이 있으신가요? 명확한 사주 조언을 위해 자세히 적어주세요." required></textarea>
             </div>
-
             <button type="submit" class="submit-btn">무료 사주풀이</button>
         </form>
     </div>
@@ -197,7 +190,6 @@
 
     <div id="result-screen">
         <h1><span id="result-name">OOO</span>님의 명식</h1>
-        
         <div class="saju-frame">
             <div class="saju-grid">
                 <div class="grid-cell row-header" style="border:none;"></div>
@@ -205,25 +197,21 @@
                 <div class="grid-cell col-header">일주(日)</div>
                 <div class="grid-cell col-header">월주(月)</div>
                 <div class="grid-cell col-header">년주(年)</div>
-
                 <div class="grid-cell row-header">십성</div>
                 <div id="t-ss" class="grid-cell shipseong-cell"></div>
                 <div id="d-ss" class="grid-cell shipseong-cell">일간</div>
                 <div id="m-ss" class="grid-cell shipseong-cell"></div>
                 <div id="y-ss" class="grid-cell shipseong-cell"></div>
-
                 <div class="grid-cell row-header">천간</div>
                 <div id="t-stem" class="grid-cell"></div>
                 <div id="d-stem" class="grid-cell"></div>
                 <div id="m-stem" class="grid-cell"></div>
                 <div id="y-stem" class="grid-cell"></div>
-
                 <div class="grid-cell row-header">지지</div>
                 <div id="t-branch" class="grid-cell"></div>
                 <div id="d-branch" class="grid-cell"></div>
                 <div id="m-branch" class="grid-cell"></div>
                 <div id="y-branch" class="grid-cell"></div>
-
                 <div class="grid-cell row-header">십성</div>
                 <div id="t-bss" class="grid-cell shipseong-cell"></div>
                 <div id="d-bss" class="grid-cell shipseong-cell"></div>
@@ -250,7 +238,6 @@
                 <div class="reading-text" id="text-advice"></div>
             </div>
         </div>
-
         <button type="button" class="cta-btn" onclick="alert('서비스 준비중입니다!')">자세한 사주풀이 받아보기(준비중)</button>
     </div>
 </div>
@@ -288,21 +275,36 @@
         return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`;
     }
 
-    // 고민 텍스트가 반영된 가상의 생성 로직
-    function generateMockText(name, dayStem, relationship, concern) {
-        const hg = ohaengMap[dayStem].hg;
-        
-        document.getElementById('text-nature').innerHTML = `<b>${name}</b>님의 본질은 <b>${hg}(${dayStem})</b>입니다. 내면에 깊은 잠재력을 품고 있으며, 자연스러운 흐름 속에서 자신의 길을 개척해 나가는 주도성을 가지고 있습니다. 신중하게 주변을 탐색하지만 방향이 정해지면 특유의 끈기를 발휘합니다.`;
-        
-        document.getElementById('text-pros-cons').innerHTML = `<b>장점은 책임감과 대처 능력입니다.</b> 현실적인 해결책을 빠르게 모색하며 묵묵히 책임을 다해 신뢰를 얻습니다. <b>단점은 다소 확고한 원칙입니다.</b> 타인의 조언을 수용하는 유연성이 필요하며, 내면의 고민을 주변과 소통하는 여유가 중요합니다.`;
-        
-        document.getElementById('text-2026').innerHTML = `<b>2026년 병오(丙午)년,</b> 뜨거운 화(火)의 기운이 강한 이 시기, ${name}님의 <b>${hg}</b> 기운에 역동적인 에너지가 주입됩니다. 준비해온 일들이 빛을 발하고 사회적 활동이 넓어질 기회입니다. 성급한 결정만 주의한다면 비약적인 도약의 해가 될 것입니다.`;
-        
-        // 입력받은 연애 상태와 고민을 활용한 풀이 문구 조합
-        document.getElementById('text-advice').innerHTML = `
-            현재 <b>${relationship}</b> 상태이시군요. <b>${name}</b>님이 적어주신 <i>"${concern}"</i>라는 고민에 대해, <b>${hg}</b>의 기운을 바탕으로 조언을 드립니다.<br><br>
-            사주 구조상 지금 시기는 무리하게 상황을 통제하려 하기보다는, 마음을 차분히 가라앉히고 순리대로 흘러가게 두는 것이 훨씬 유리합니다. 고민하시는 문제는 꼬인 실타래처럼 보일지라도 본인이 가진 특유의 돌파력을 통해 시기가 되면 자연스럽게 해소될 운기입니다. 너무 자책하거나 조급해하지 마시고, 당분간은 본인의 멘탈 관리에 집중하며 긍정적인 마음가짐을 유지해 보세요.
-        `;
+    // ★ 가짜 함수를 지우고, 다시 Vercel 서버(AI)를 호출하는 함수로 완벽 복구했습니다!
+    async function fetchRealSajuReading(name, dayStem, relationship, concern, sajuData) {
+        try {
+            document.getElementById('loading-msg').textContent = "AI가 명식을 분석 중입니다...";
+            
+            const response = await fetch('/api/saju', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, dayStem, relationship, concern, sajuData })
+            });
+
+            if (!response.ok) throw new Error('서버 응답 오류');
+
+            const aiResult = await response.json();
+            
+            // AI가 보내온 500자 분량의 진짜 답변을 화면에 꽂아넣습니다.
+            document.getElementById('text-nature').innerHTML = aiResult.nature;
+            document.getElementById('text-pros-cons').innerHTML = aiResult.pros_cons;
+            document.getElementById('text-2026').innerHTML = aiResult.fortune_2026;
+            document.getElementById('text-advice').innerHTML = aiResult.advice;
+
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+
+        } catch (error) {
+            console.error("AI API 에러:", error);
+            alert('AI 풀이를 가져오는 중 문제가 발생했습니다. 서버 연결 상태를 확인해주세요.');
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('input-screen').style.display = 'block';
+        }
     }
 
     document.getElementById('saju-form').addEventListener('submit', function(e) {
@@ -311,18 +313,16 @@
         const dob = `${document.getElementById('birth-year').value}-${document.getElementById('birth-month').value.padStart(2, '0')}-${document.getElementById('birth-day').value.padStart(2, '0')}`;
         const time = document.getElementById('birth-time').value;
         const calendar = document.querySelector('input[name="calendar"]:checked').value;
-        
-        // 새로 추가된 입력값 가져오기
         const relationship = document.querySelector('input[name="relationship"]:checked').value;
         const concern = document.getElementById('concern').value;
 
         document.getElementById('input-screen').style.display = 'none';
         document.getElementById('loading-screen').style.display = 'block';
         
-        setTimeout(() => { calculateAndShowSaju(name, dob, time, calendar, relationship, concern); }, 1500);
+        calculateAndCallAI(name, dob, time, calendar, relationship, concern);
     });
 
-    function calculateAndShowSaju(name, dob, time, calendar, relationship, concern) {
+    function calculateAndCallAI(name, dob, time, calendar, relationship, concern) {
         const calcTime = time === 'unknown' ? '12:00' : time;
         let inputDate = new Date(`${dob}T${calcTime}:00`);
         if (time !== 'unknown') inputDate.setMinutes(inputDate.getMinutes() - 30);
@@ -349,19 +349,18 @@
                 document.getElementById(`${p}-branch`).innerHTML = renderChar(targetBranch);
             });
             
-            // 데이터 전달하여 텍스트 생성
-            generateMockText(name, dayStem, relationship, concern);
+            const timeStr = typeof timeH === 'string' ? timeH : timeH.join('');
+            const sajuData = { year: yearH, month: monthH, day: dayH, time: timeStr };
+            
+            // 여기서 AI 백엔드 API 호출을 시작합니다.
+            fetchRealSajuReading(name, dayStem, relationship, concern, sajuData);
             
         } catch (error) { 
-            alert('오류가 발생했습니다.'); 
-            document.getElementById('result-screen').style.display = 'none';
+            console.error("날짜 계산 에러:", error);
+            alert('날짜 계산 중 오류가 발생했습니다.'); 
             document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('input-screen').style.display = 'block';
-            return; 
         }
-        
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('result-screen').style.display = 'block';
     }
 </script>
 </body>
