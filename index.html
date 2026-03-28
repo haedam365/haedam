@@ -10,7 +10,22 @@
         body { font-family: 'Gowun Batang', serif; background: linear-gradient(to bottom, #050810, #101525); color: #fff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 15px; overflow-x: hidden; position: relative; box-sizing: border-box; }
         .moon { position: fixed; top: 5%; right: 10%; width: 60px; height: 60px; background: #fffde0; border-radius: 50%; box-shadow: 0 0 30px 10px rgba(255, 253, 224, 0.2); z-index: 0; }
         .container { background-color: rgba(253, 251, 247, 0.98); padding: 25px 20px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); width: 100%; max-width: 500px; text-align: center; position: relative; z-index: 1; border: 1px solid #dcd3c1; color: #333; box-sizing: border-box; margin-bottom: 30px; }
-        h1 { font-size: 24px; margin-bottom: 25px; color: #1a1a1a; font-weight: 700; border-bottom: 2px solid #8b2626; display: inline-block; padding-bottom: 8px; }
+        
+        /* 로고 스타일 (가운데 정렬 및 크기 제어) */
+        .logo-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px; /* 로고와 제목 사이 간격 */
+            width: 100%;
+        }
+        .main-logo {
+            max-width: 150px; /* 로고 최대 너비 (스마트폰 고려) */
+            height: auto;    /* 비율 유지 */
+            display: block;
+        }
+
+        h1 { font-size: 24px; margin-bottom: 25px; color: #1a1a1a; font-weight: 700; border-bottom: 2px solid #8b2626; display: inline-block; padding-bottom: 8px; margin-top: 0; }
         .form-group { margin-bottom: 20px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 15px; color: #222; }
         input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; font-family: 'Gowun Batang', serif; background-color: #fff; }
@@ -49,6 +64,10 @@
 <div class="moon"></div>
 <div class="container">
     <div id="input-screen">
+        <div class="logo-wrapper">
+            <img src="https://www.myungrijikseol.me/image/hdlogo.png" alt="해담 로고" class="main-logo" id="main-logo-img">
+        </div>
+        
         <h1>내담자정보</h1>
         <form id="saju-form">
             <div class="form-group"><label>이름</label><input type="text" id="name" placeholder="이름을 입력하세요" required></div>
@@ -65,6 +84,10 @@
     </div>
     <div id="loading-screen"><h1 id="loading-msg" style="font-size: 20px;">만세력을 짚어보는 중...</h1><div class="spinner"></div></div>
     <div id="result-screen">
+        <div class="logo-wrapper">
+            <img src="https://www.myungrijikseol.me/image/hdlogo.png" alt="해담 로고" class="main-logo" id="result-logo-img">
+        </div>
+        
         <h1 style="font-size: 22px;"><span id="result-name">OOO</span>님의 명식</h1>
         <div class="saju-frame"><div class="saju-grid"><div class="grid-cell row-header"></div><div class="grid-cell col-header">시주</div><div class="grid-cell col-header">일주</div><div class="grid-cell col-header">월주</div><div class="grid-cell col-header">년주</div><div class="grid-cell row-header">십성</div><div id="t-ss" class="grid-cell shipseong-cell"></div><div id="d-ss" class="grid-cell shipseong-cell">일간</div><div id="m-ss" class="grid-cell shipseong-cell"></div><div id="y-ss" class="grid-cell shipseong-cell"></div><div class="grid-cell row-header">천간</div><div id="t-stem" class="grid-cell"></div><div id="d-stem" class="grid-cell"></div><div id="m-stem" class="grid-cell"></div><div id="y-stem" class="grid-cell"></div><div class="grid-cell row-header">지지</div><div id="t-branch" class="grid-cell"></div><div id="d-branch" class="grid-cell"></div><div id="m-branch" class="grid-cell"></div><div id="y-branch" class="grid-cell"></div><div class="grid-cell row-header">십성</div><div id="t-bss" class="grid-cell shipseong-cell"></div><div id="d-bss" class="grid-cell shipseong-cell"></div><div id="m-bss" class="grid-cell shipseong-cell"></div><div id="y-bss" class="grid-cell shipseong-cell"></div></div></div>
         <div class="reading-container">
