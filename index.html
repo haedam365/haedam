@@ -9,12 +9,11 @@
     <style>
         body { font-family: 'Gowun Batang', serif; background: linear-gradient(to bottom, #050810, #101525); color: #fff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 15px; overflow-x: hidden; position: relative; box-sizing: border-box; }
         .moon { position: fixed; top: 5%; right: 10%; width: 60px; height: 60px; background: #fffde0; border-radius: 50%; box-shadow: 0 0 30px 10px rgba(255, 253, 224, 0.2); z-index: 0; }
-        .cloud { position: fixed; background: rgba(255, 255, 255, 0.05); border-radius: 100px; filter: blur(8px); z-index: 0; animation: float linear infinite; }
         .container { background-color: rgba(253, 251, 247, 0.98); padding: 25px 20px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); width: 100%; max-width: 500px; text-align: center; position: relative; z-index: 1; border: 1px solid #dcd3c1; color: #333; box-sizing: border-box; margin-bottom: 30px; }
         h1 { font-size: 24px; margin-bottom: 25px; color: #1a1a1a; font-weight: 700; border-bottom: 2px solid #8b2626; display: inline-block; padding-bottom: 8px; }
         .form-group { margin-bottom: 20px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 15px; color: #222; }
-        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; font-family: 'Gowun Batang', serif; background-color: #fff; -webkit-appearance: none; }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; font-family: 'Gowun Batang', serif; background-color: #fff; }
         textarea { resize: none; min-height: 100px; line-height: 1.5; }
         .date-inputs { display: flex; align-items: center; gap: 8px; }
         .date-inputs input { flex: 1; min-width: 0; text-align: center; padding: 12px 5px; }
@@ -47,7 +46,7 @@
     </style>
 </head>
 <body>
-<div class="moon"></div><div class="cloud"></div>
+<div class="moon"></div>
 <div class="container">
     <div id="input-screen">
         <h1>내담자정보</h1>
@@ -55,29 +54,49 @@
             <div class="form-group"><label>이름</label><input type="text" id="name" placeholder="이름을 입력하세요" required></div>
             <div class="form-group"><label>성별</label><div class="radio-group"><label><input type="radio" name="gender" value="m" checked> <span>남성</span></label><label><input type="radio" name="gender" value="f"> <span>여성</span></label></div></div>
             <div class="form-group"><label>달력 구분</label><div class="radio-group"><label><input type="radio" name="calendar" value="solar" checked> <span>양력</span></label><label><input type="radio" name="calendar" value="lunar"> <span>음력</span></label><label><input type="radio" name="calendar" value="leap"> <span>윤달</span></label></div></div>
-            <div class="form-group"><label>생년월일</label><div class="date-inputs"><input type="number" id="birth-year" placeholder="1995" required> <span>년</span><input type="number" id="birth-month" placeholder="3" required> <span>월</span><input type="number" id="birth-day" placeholder="1" required> <span>일</span></div></div>
-            <div class="form-group"><label>태어난 시간</label><select id="birth-time" required><option value="unknown">시간 모름</option><option value="00:30">자시</option><option value="02:30">축시</option><option value="04:30">인시</option><option value="06:30">묘시</option><option value="08:30" selected>진시</option><option value="10:30">사시</option><option value="12:30">오시</option><option value="14:30">미시</option><option value="16:30">신시</option><option value="18:30">유시</option><option value="20:30">술시</option><option value="22:30">해시</option></select></div>
-            <div class="form-group"><label>연애상태</label><div class="radio-group"><label><input type="radio" name="relationship" value="솔로" checked> <span>솔로</span></label><label><input type="radio" name="relationship" value="연애중"> <span>연애중</span></label><label><input type="radio" name="relationship" value="기혼"> <span>기혼</span></label><label><input type="radio" name="relationship" value="이혼"> <span>이혼</span></label><label><input type="radio" name="relationship" value="돌싱"> <span>돌싱</span></label></div></div>
-            <div class="form-group"><label>현재 고민</label><textarea id="concern" placeholder="고민을 적어주세요." required></textarea></div>
+            <div class="form-group"><label>생년월일</label><div class="date-inputs"><input type="number" id="birth-year" placeholder="1995" required> <span>년</span><input type="number" id="birth-month" placeholder="3" min="1" max="12" required> <span>월</span><input type="number" id="birth-day" placeholder="1" min="1" max="31" required> <span>일</span></div></div>
+            <div class="form-group"><label>태어난 시간</label><select id="birth-time" required>
+                <option value="00:30">자시 (23:30 ~ 01:29)</option><option value="02:30">축시 (01:30 ~ 03:29)</option><option value="04:30">인시 (03:30 ~ 05:29)</option><option value="06:30">묘시 (05:30 ~ 07:29)</option><option value="08:30" selected>진시 (07:30 ~ 09:29)</option><option value="10:30">사시 (09:30 ~ 11:29)</option><option value="12:30">오시 (11:30 ~ 13:29)</option><option value="14:30">미시 (13:30 ~ 15:29)</option><option value="16:30">신시 (15:30 ~ 17:29)</option><option value="18:30">유시 (17:30 ~ 19:29)</option><option value="20:30">술시 (19:30 ~ 21:29)</option><option value="22:30">해시 (21:30 ~ 23:29)</option><option value="unknown">시간 모름</option>
+            </select></div>
+            <div class="form-group"><label>현재 연애상태</label><div class="radio-group"><label><input type="radio" name="relationship" value="솔로" checked> <span>솔로</span></label><label><input type="radio" name="relationship" value="연애중"> <span>연애중</span></label><label><input type="radio" name="relationship" value="기혼"> <span>기혼</span></label><label><input type="radio" name="relationship" value="이혼"> <span>이혼</span></label><label><input type="radio" name="relationship" value="돌싱"> <span>돌싱</span></label></div></div>
+            <div class="form-group"><label>현재 고민</label><textarea id="concern" placeholder="고민을 적어주시면 AI가 사주에 맞춰 조언해 드립니다." required></textarea></div>
             <button type="submit" class="submit-btn">무료 사주풀이</button>
         </form>
     </div>
-    <div id="loading-screen"><h1 id="loading-msg" style="font-size: 20px;">분석 중...</h1><div class="spinner"></div></div>
-    <div id="result-screen"><h1 style="font-size: 22px;"><span id="result-name">OOO</span>님의 명식</h1><div class="saju-frame"><div class="saju-grid"><div class="grid-cell row-header"></div><div class="grid-cell col-header">시주</div><div class="grid-cell col-header">일주</div><div class="grid-cell col-header">월주</div><div class="grid-cell col-header">년주</div><div class="grid-cell row-header">십성</div><div id="t-ss" class="grid-cell shipseong-cell"></div><div id="d-ss" class="grid-cell shipseong-cell">일간</div><div id="m-ss" class="grid-cell shipseong-cell"></div><div id="y-ss" class="grid-cell shipseong-cell"></div><div class="grid-cell row-header">천간</div><div id="t-stem" class="grid-cell"></div><div id="d-stem" class="grid-cell"></div><div id="m-stem" class="grid-cell"></div><div id="y-stem" class="grid-cell"></div><div class="grid-cell row-header">지지</div><div id="t-branch" class="grid-cell"></div><div id="d-branch" class="grid-cell"></div><div id="m-branch" class="grid-cell"></div><div id="y-branch" class="grid-cell"></div><div class="grid-cell row-header">십성</div><div id="t-bss" class="grid-cell shipseong-cell"></div><div id="d-bss" class="grid-cell shipseong-cell"></div><div id="m-bss" class="grid-cell shipseong-cell"></div><div id="y-bss" class="grid-cell shipseong-cell"></div></div></div>
+    <div id="loading-screen"><h1 id="loading-msg" style="font-size: 20px;">만세력을 짚어보는 중...</h1><div class="spinner"></div></div>
+    <div id="result-screen">
+        <h1 style="font-size: 22px;"><span id="result-name">OOO</span>님의 명식</h1>
+        <div class="saju-frame"><div class="saju-grid"><div class="grid-cell row-header"></div><div class="grid-cell col-header">시주</div><div class="grid-cell col-header">일주</div><div class="grid-cell col-header">월주</div><div class="grid-cell col-header">년주</div><div class="grid-cell row-header">십성</div><div id="t-ss" class="grid-cell shipseong-cell"></div><div id="d-ss" class="grid-cell shipseong-cell">일간</div><div id="m-ss" class="grid-cell shipseong-cell"></div><div id="y-ss" class="grid-cell shipseong-cell"></div><div class="grid-cell row-header">천간</div><div id="t-stem" class="grid-cell"></div><div id="d-stem" class="grid-cell"></div><div id="m-stem" class="grid-cell"></div><div id="y-stem" class="grid-cell"></div><div class="grid-cell row-header">지지</div><div id="t-branch" class="grid-cell"></div><div id="d-branch" class="grid-cell"></div><div id="m-branch" class="grid-cell"></div><div id="y-branch" class="grid-cell"></div><div class="grid-cell row-header">십성</div><div id="t-bss" class="grid-cell shipseong-cell"></div><div id="d-bss" class="grid-cell shipseong-cell"></div><div id="m-bss" class="grid-cell shipseong-cell"></div><div id="y-bss" class="grid-cell shipseong-cell"></div></div></div>
         <div class="reading-container">
             <div class="reading-section"><h3>성향과 기질</h3><div class="reading-text" id="text-nature"></div></div>
             <div class="reading-section"><h3>장점과 단점</h3><div class="reading-text" id="text-pros-cons"></div></div>
             <div class="reading-section"><h3>2026년 총운</h3><div class="reading-text" id="text-2026"></div></div>
             <div class="reading-section" style="border: 2px solid #e5e0d8; background-color: #fdfbf7;"><h3>해담의 조언</h3><div class="reading-text" id="text-advice"></div></div>
         </div>
-        <button type="button" class="cta-btn" onclick="alert('서비스 준비중입니다!')">자세한 상담 (준비중)</button>
+        <button type="button" class="cta-btn" onclick="alert('서비스 준비중입니다!')">자세한 상담 받아보기(준비중)</button>
         <button type="button" onclick="location.reload()" style="background:none; border:none; color:#888; text-decoration:underline; margin-top:20px; font-family:'Gowun Batang'; cursor:pointer;">다시하기</button>
     </div>
 </div>
 <script>
     const ohaengMap = { '甲': { hg: '갑', el: '목', type: '+목', class: 'wood' }, '乙': { hg: '을', el: '목', type: '-목', class: 'wood' }, '丙': { hg: '병', el: '화', type: '+화', class: 'fire' }, '丁': { hg: '정', el: '화', type: '-화', class: 'fire' }, '戊': { hg: '무', el: '토', type: '+토', class: 'earth' }, '己': { hg: '기', el: '토', type: '-토', class: 'earth' }, '庚': { hg: '경', el: '금', type: '+금', class: 'metal' }, '辛': { hg: '신', el: '금', type: '-금', class: 'metal' }, '壬': { hg: '임', el: '수', type: '+수', class: 'water' }, '癸': { hg: '계', el: '수', type: '-수', class: 'water' }, '子': { hg: '자', el: '수', type: '-수', class: 'water' }, '丑': { hg: '축', el: '토', type: '-토', class: 'earth' }, '寅': { hg: '인', el: '목', type: '+목', class: 'wood' }, '卯': { hg: '묘', el: '목', type: '-목', class: 'wood' }, '辰': { hg: '진', el: '토', type: '+토', class: 'earth' }, '巳': { hg: '사', el: '화', type: '+화', class: 'fire' }, '午': { hg: '오', el: '화', type: '-화', class: 'fire' }, '未': { hg: '미', el: '토', type: '-토', class: 'earth' }, '申': { hg: '신', el: '금', type: '+금', class: 'metal' }, '酉': { hg: '유', el: '금', type: '-금', class: 'metal' }, '戌': { hg: '술', el: '토', type: '+토', class: 'earth' }, '亥': { hg: '해', el: '수', type: '+수', class: 'water' } };
-    function getShipseong(dsh, th) { if (!dsh || !th || th === '?') return ''; if (dsh === th) return '비견'; const me = ohaengMap[dsh], target = ohaengMap[th]; if (!me || !target) return ''; const els = { '목': 0, '화': 1, '토': 2, '금': 3, '수': 4 }; const diff = (els[target.el] - els[me.el] + 5) % 5; const map = { 0: (me.type[0] === target.type[0]) ? '비견' : '겁재', 1: (me.type[0] === target.type[0]) ? '식신' : '상관', 2: (me.type[0] === target.type[0]) ? '편재' : '정재', 3: (me.type[0] === target.type[0]) ? '편관' : '정관', 4: (me.type[0] === target.type[0]) ? '편인' : '정인' }; return map[diff]; }
-    function renderChar(hanja) { if (!hanja || hanja === '?' || !ohaengMap[hanja]) return `<div class="char-container unknown"><span class="neon-hangul">?</span></div>`; const data = ohaengMap[hanja]; return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`; }
+    
+    function getShipseong(dsh, th) { 
+        if (!dsh || !th || th === '?') return ''; 
+        if (dsh === th) return '비견'; 
+        const me = ohaengMap[dsh], target = ohaengMap[th]; 
+        if (!me || !target) return ''; 
+        const els = { '목': 0, '화': 1, '토': 2, '금': 3, '수': 4 }; 
+        const diff = (els[target.el] - els[me.el] + 5) % 5; 
+        const isSame = (me.type[0] === target.type[0]); 
+        const map = { 0: isSame ? '비견' : '겁재', 1: isSame ? '식신' : '상관', 2: isSame ? '편재' : '정재', 3: isSame ? '편관' : '정관', 4: isSame ? '편인' : '정인' }; 
+        return map[diff]; 
+    }
+
+    function renderChar(hanja) { 
+        if (!hanja || hanja === '?' || !ohaengMap[hanja]) return `<div class="char-container unknown"><span class="neon-hangul">?</span></div>`; 
+        const data = ohaengMap[hanja]; 
+        return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`; 
+    }
 
     document.getElementById('saju-form').addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -85,7 +104,7 @@
         const year = parseInt(document.getElementById('birth-year').value);
         const month = parseInt(document.getElementById('birth-month').value);
         const day = parseInt(document.getElementById('birth-day').value);
-        const birthTimeStr = document.getElementById('birth-time').value;
+        const timeVal = document.getElementById('birth-time').value;
         const calendar = document.querySelector('input[name="calendar"]:checked').value;
         const relationship = document.querySelector('input[name="relationship"]:checked').value;
         const concern = document.getElementById('concern').value;
@@ -95,13 +114,21 @@
 
         try {
             let h = 12, m = 0;
-            if (birthTimeStr !== 'unknown') [h, m] = birthTimeStr.split(':').map(Number);
-            const isLeap = (calendar === 'leap');
-            const bazi = (calendar === 'solar') 
-                ? Solar.fromYmdHms(year, month, day, h, m, 0).getLunar().getEightChar()
-                : Lunar.fromYmdHms(year, isLeap ? -month : month, day, h, m, 0).getEightChar();
+            if (timeVal !== 'unknown') [h, m] = timeVal.split(':').map(Number);
 
-            const yh = bazi.getYear(), mh = bazi.getMonth(), dh = bazi.getDay(), th = (birthTimeStr === 'unknown') ? '??' : bazi.getTime();
+            // 라이브러리 존재 확인 및 계산
+            if (typeof Lunar === 'undefined' || typeof Solar === 'undefined') {
+                throw new Error('만세력 도구를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+            }
+
+            let bazi;
+            if (calendar === 'solar') {
+                bazi = Solar.fromYmdHms(year, month, day, h, m, 0).getLunar().getEightChar();
+            } else {
+                bazi = Lunar.fromYmdHms(year, calendar === 'leap' ? -month : month, day, h, m, 0).getEightChar();
+            }
+
+            const yh = bazi.getYear(), mh = bazi.getMonth(), dh = bazi.getDay(), th = (timeVal === 'unknown') ? ['?', '?'] : bazi.getTime();
             const dStem = dh[0];
 
             document.getElementById('result-name').textContent = name;
@@ -116,7 +143,7 @@
             const response = await fetch('/api/saju', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, dayStem: dStem, relationship, concern, sajuData: { year: yh, month: mh, day: dh, time: th } })
+                body: JSON.stringify({ name, dayStem: dStem, relationship, concern, sajuData: { year: yh, month: mh, day: dh, time: th.join ? th.join('') : th } })
             });
 
             const aiResult = await response.json();
@@ -132,7 +159,7 @@
             window.scrollTo(0, 0);
 
         } catch (err) {
-            alert('오류가 발생했습니다: ' + err.message);
+            alert(err.message || '오류가 발생했습니다.');
             location.reload();
         }
     });
