@@ -8,8 +8,9 @@ module.exports = async function handler(req, res) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
+    // AI에게 내리는 프롬프트 (명리직설 -> 해담으로 변경)
     const prompt = `
-    너는 20년 경력의 따뜻하고 통찰력 있는 사주 명리학 전문가야.
+    너는 20년 경력의 따뜻하고 통찰력 있는 사주 명리학 전문가 '해담'이야.
     아래 내담자의 정보를 바탕으로 4가지 항목을 각각 400~500자로 풀이해 줘.
 
     [내담자 정보]
