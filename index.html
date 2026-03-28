@@ -84,7 +84,6 @@
     
     async function fetchRealSajuReading(name, dayStem, relationship, concern, sajuData) {
         try {
-            document.getElementById('loading-msg').textContent = "AI가 명식을 분석 중입니다...";
             const response = await fetch('/api/saju', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -121,26 +120,18 @@
         document.getElementById('loading-screen').style.display = 'block';
 
         try {
-            let hour = 12, min = 0;
-            if (birthTimeStr !== 'unknown') {
-                [hour, min] = birthTimeStr.split(':').map(Number);
-            }
+            let h = 12, m = 0;
+            if (birthTimeStr !== 'unknown') [h, m] = birthTimeStr.split(':').map(Number);
 
-            // 만세력 계산
-            let bazi;
-            if (calendar === 'solar') {
-                const solar = Solar.fromYmdHms(year, month, day, hour, min, 0);
-                bazi = solar.getLunar().getEightChar();
-            } else {
-                const isLeap = (calendar === 'leap');
-                const lunar = Lunar.fromYmdHms(year, isLeap ? -month : month, day, hour, min, 0);
-                bazi = lunar.getEightChar();
-            }
+            const isLeap = (calendar === 'leap');
+            const bazi = (calendar === 'solar') 
+                ? Solar.fromYmdHms(year, month, day, h, m, 0).getLunar().getEightChar()
+                : Lunar.fromYmdHms(year, isLeap ? -month : month, day, h, m, 0).getEightChar();
 
             const yh = bazi.getYear();
             const mh = bazi.getMonth();
             const dh = bazi.getDay();
-            const th = birthTimeStr === 'unknown' ? ['?', '?'] : bazi.getTime();
+            const th = (birthTimeStr === 'unknown') ? '??' : bazi.getTime();
             const dStem = dh[0];
 
             document.getElementById('result-name').textContent = name;
@@ -153,18 +144,13 @@
                 document.getElementById(`${p}-branch`).innerHTML = renderChar(tb);
             });
 
-            const sajuPayload = { 
-                year: yh.split(''), 
-                month: mh.split(''), 
-                day: dh.split(''), 
-                time: Array.isArray(th) ? th : th.split('') 
-            };
-            
-            fetchRealSajuReading(name, dStem, relationship, concern, sajuPayload);
-
+            // 데이터 전송 형식을 서버와 완벽하게 일치시킴
+            fetchRealSajuReading(name, dStem, relationship, concern, { 
+                year: yh, month: mh, day: dh, time: th 
+            });
         } catch (err) {
             console.error(err);
-            alert('계산 중 오류가 발생했습니다. 생년월일을 다시 확인해주세요.');
+            alert('날짜 계산 중 오류가 발생했습니다.');
             location.reload();
         }
     });
