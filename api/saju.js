@@ -1,48 +1,58 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 module.exports = async (req, res) => {
-  // 1. POST 요청인지 확인
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: '잘못된 요청 방식입니다.' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
     const { name, dayStem, relationship, concern, sajuData } = req.body;
 
-    // 2. API 키가 있는지 확인
     if (!process.env.GEMINI_API_KEY) {
-      return res.status(500).json({ error: '서버에 API 키가 설정되지 않았습니다. Vercel 환경변수를 확인하세요.' });
+      return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // 3. 프롬프트 작성
-    const prompt = `
-      당신은 따뜻한 사주 상담가 '해담'입니다. 
-      다음 정보를 바탕으로 내담자 ${name}님에게 다정한 편지 형식으로 풀이하세요.
-      - 일간(본질): ${dayStem}
-      - 고민: ${concern}
-      - 연애상태: ${relationship}
-      - 사주데이터: ${JSON.stringify(sajuData)}
+    // 사주 데이터를 읽기 좋게 문자열로 변환
+    const formatSaju = `년:${sajuData.year}, 월:${sajuData.month}, 일:${sajuData.day}, 시:${sajuData.time}`;
 
-      [규칙]
-      - 한자 용어는 절대 쓰지 말고 쉬운 우리말로 풀이하세요.
-      - 자연의 비유(나무, 햇살, 바다 등)를 풍부하게 사용하세요.
-      - 반드시 아래 JSON 형식으로만 답변하세요. 다른 말은 덧붙이지 마세요.
-      {"nature": "...", "pros_cons": "...", "fortune_2026": "...", "advice": "..."}
+    const prompt = `
+      너는 다정하고 지혜로운 사주 상담가 '해담'이야. 
+      아래 내담자 정보를 바탕으로 한자 용어 없이 자연의 비유(나무, 햇살, 바다 등)를 담아 따뜻하게 풀이해줘.
+
+      내담자: ${name} (${relationship})
+      본질: ${dayStem} (일간)
+      고민: ${concern}
+      사주명식: ${formatSaju}
+
+      [답변 규칙]
+      - 반드시 JSON 형식으로만 답변할 것. 다른 말은 절대 덧붙이지 마.
+      - 말투는 실제 사람이 말하듯 "~해요", "~일 거예요" 같은 구어체를 사용해.
+      - 각 항목은 공백 포함 300자 내외로 정성껏 작성해.
+
+      {
+        "nature": "자연에 비유한 성향과 기질...",
+        "pros_cons": "본인의 장점과 주의할 점...",
+        "fortune_2026": "2026년 병오년의 흐름...",
+        "advice": "고민에 대한 명리적 조언..."
+      }
     `;
 
-    // 4. AI에게 요청
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+    let text = response.text();
+    
+    // JSON 추출 로직 강화
+    const jsonStart = text.indexOf('{');
+    const jsonEnd = text.lastIndexOf('}') + 1;
+    const jsonString = text.slice(jsonStart, jsonEnd);
 
-    // 5. 결과 전송
-    res.status(200).json(JSON.parse(text));
+    res.status(200).json(JSON.parse(jsonString));
 
   } catch (error) {
-    console.error("AI 상세 에러:", error);
+    console.error("AI 에러:", error);
     res.status(500).json({ error: '분석 실패: ' + error.message });
   }
 };
