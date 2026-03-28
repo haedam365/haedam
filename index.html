@@ -7,266 +7,81 @@
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.min.js"></script>
     <style>
-        /* 모바일 최적화 레이아웃 */
-        body {
-            font-family: 'Gowun Batang', serif;
-            background: linear-gradient(to bottom, #050810, #101525);
-            color: #fff; display: flex; justify-content: center; align-items: flex-start;
-            min-height: 100vh; margin: 0; padding: 15px; overflow-x: hidden; position: relative;
-            box-sizing: border-box;
-        }
+        body { font-family: 'Gowun Batang', serif; background: linear-gradient(to bottom, #050810, #101525); color: #fff; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 15px; overflow-x: hidden; position: relative; box-sizing: border-box; }
         .moon { position: fixed; top: 5%; right: 10%; width: 60px; height: 60px; background: #fffde0; border-radius: 50%; box-shadow: 0 0 30px 10px rgba(255, 253, 224, 0.2); z-index: 0; }
         .cloud { position: fixed; background: rgba(255, 255, 255, 0.05); border-radius: 100px; filter: blur(8px); z-index: 0; animation: float linear infinite; }
         .cloud:nth-child(2) { width: 200px; height: 40px; top: 15%; left: -200px; animation-duration: 40s; }
         @keyframes float { from { transform: translateX(0); } to { transform: translateX(120vw); } }
-
-        .container {
-            background-color: rgba(253, 251, 247, 0.98); padding: 25px 20px; border-radius: 16px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6); width: 100%; max-width: 500px;
-            text-align: center; position: relative; z-index: 1; border: 1px solid #dcd3c1;
-            color: #333; box-sizing: border-box; margin-bottom: 30px;
-        }
+        .container { background-color: rgba(253, 251, 247, 0.98); padding: 25px 20px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); width: 100%; max-width: 500px; text-align: center; position: relative; z-index: 1; border: 1px solid #dcd3c1; color: #333; box-sizing: border-box; margin-bottom: 30px; }
         h1 { font-size: 24px; margin-bottom: 25px; color: #1a1a1a; font-weight: 700; border-bottom: 2px solid #8b2626; display: inline-block; padding-bottom: 8px; }
-
         .form-group { margin-bottom: 20px; text-align: left; }
         label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 15px; color: #222; }
-        input[type="text"], input[type="number"], select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; 
-            box-sizing: border-box; font-size: 16px; font-family: 'Gowun Batang', serif; background-color: #fff;
-            -webkit-appearance: none; /* iOS 기본 스타일 방지 */
-        }
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 16px; font-family: 'Gowun Batang', serif; background-color: #fff; -webkit-appearance: none; }
         textarea { resize: none; min-height: 100px; line-height: 1.5; }
-        
         .date-inputs { display: flex; align-items: center; gap: 8px; }
         .date-inputs input { flex: 1; min-width: 0; text-align: center; padding: 12px 5px; }
         .date-inputs span { font-size: 14px; white-space: nowrap; }
-        
         .radio-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 8px; }
-        .radio-group label { 
-            text-align: center; background-color: #f2ede4; padding: 10px 5px; 
-            border-radius: 8px; cursor: pointer; margin: 0; font-weight: normal; transition: 0.2s; 
-            border: 1px solid transparent; color: #444; font-size: 14px;
-        }
+        .radio-group label { text-align: center; background-color: #f2ede4; padding: 10px 5px; border-radius: 8px; cursor: pointer; margin: 0; font-weight: normal; transition: 0.2s; border: 1px solid transparent; color: #444; font-size: 14px; }
         .radio-group input[type="radio"] { display: none; }
         .radio-group label:has(input:checked) { background-color: #8b2626; color: white; font-weight: 700; }
-
-        button.submit-btn { 
-            width: 100%; padding: 16px; background: linear-gradient(135deg, #2c3e50, #1a252f); 
-            color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; 
-            cursor: pointer; margin-top: 10px; font-family: 'Gowun Batang', serif; 
-        }
-        
+        button.submit-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #2c3e50, #1a252f); color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; font-family: 'Gowun Batang', serif; }
         #loading-screen, #result-screen { display: none; width: 100%; }
         .spinner { border: 5px solid #f0ece1; border-top: 5px solid #8b2626; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 30px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* 결과창 모바일 최적화 */
         .saju-frame { margin-top: 20px; padding: 5px; background: #080a10; border-radius: 12px; border: 2px solid #c5a059; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .saju-grid { display: grid; grid-template-columns: 50px repeat(4, 1fr); background-color: #080a10; width: 100%; }
         .grid-cell { border: 0.5px solid rgba(197, 160, 89, 0.2); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 2px; color: #fff; overflow: hidden; }
         .col-header { font-size: 12px; color: #e5e0d8; padding: 10px 0; font-weight: 700; }
         .row-header { font-size: 11px; color: #bbb; background-color: rgba(255,255,255,0.02); }
         .shipseong-cell { font-size: 10px; color: #d4af37; height: 30px; word-break: keep-all; }
-
         .neon-hangul { font-size: 28px; font-weight: 900; line-height: 1.2; }
         .sub-info { font-size: 9px; scale: 0.9; opacity: 0.8; }
-
-        /* 오행 네온 (모바일에서도 뚜렷하게) */
         .wood .neon-hangul { color: #bffff0; text-shadow: 0 0 8px #2e7d63; }
         .fire .neon-hangul { color: #ffb3b3; text-shadow: 0 0 8px #c94040; }
         .earth .neon-hangul { color: #ffead0; text-shadow: 0 0 8px #b58536; }
         .metal .neon-hangul { color: #ffffff; text-shadow: 0 0 8px #aaaaaa; }
         .water .neon-hangul { color: #d0e8ff; text-shadow: 0 0 8px #2a5275; }
-
         .reading-container { margin-top: 25px; text-align: left; }
         .reading-section { background-color: #fff; border: 1px solid #e5e0d8; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
         .reading-section h3 { margin: 0 0 10px 0; font-size: 16px; color: #8b2626; border-bottom: 1px dashed #e5e0d8; padding-bottom: 5px; }
         .reading-text { font-size: 14.5px; line-height: 1.6; color: #333; text-align: justify; word-break: break-all; }
-
-        .cta-btn { 
-            background: linear-gradient(135deg, #8b2626, #5c1818); color: #fff; border: 1px solid #c5a059;
-            width: 100%; padding: 18px; border-radius: 12px; font-size: 17px; font-weight: 700; margin-top: 10px;
-        }
-
-        /* 작은 화면 대응 */
-        @media screen and (max-width: 380px) {
-            .neon-hangul { font-size: 24px; }
-            .grid-cell { padding: 8px 1px; }
-            .col-header { font-size: 11px; }
-        }
+        .cta-btn { background: linear-gradient(135deg, #8b2626, #5c1818); color: #fff; border: 1px solid #c5a059; width: 100%; padding: 18px; border-radius: 12px; font-size: 17px; font-weight: 700; margin-top: 10px; cursor: pointer; }
+        @media screen and (max-width: 380px) { .neon-hangul { font-size: 24px; } .grid-cell { padding: 8px 1px; } .col-header { font-size: 11px; } }
     </style>
 </head>
 <body>
-
 <div class="moon"></div><div class="cloud"></div>
-
 <div class="container">
     <div id="input-screen">
         <h1>내담자정보</h1>
         <form id="saju-form">
-            <div class="form-group">
-                <label>이름</label>
-                <input type="text" id="name" placeholder="이름을 입력하세요" required>
-            </div>
-            
-            <div class="form-group">
-                <label>성별</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="gender" value="m" checked> <span>남성</span></label>
-                    <label><input type="radio" name="gender" value="f"> <span>여성</span></label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>달력 구분</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="calendar" value="solar" checked> <span>양력</span></label>
-                    <label><input type="radio" name="calendar" value="lunar"> <span>음력</span></label>
-                    <label><input type="radio" name="calendar" value="leap"> <span>윤달</span></label>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>생년월일</label>
-                <div class="date-inputs">
-                    <input type="number" id="birth-year" placeholder="1995" pattern="\d*" required> <span>년</span>
-                    <input type="number" id="birth-month" placeholder="3" min="1" max="12" pattern="\d*" required> <span>월</span>
-                    <input type="number" id="birth-day" placeholder="1" min="1" max="31" pattern="\d*" required> <span>일</span>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>태어난 시간</label>
-                <select id="birth-time" required>
-                    <option value="unknown">시간 모름</option>
-                    <option value="00:30">자시 (23:30 ~ 01:29)</option>
-                    <option value="02:30">축시 (01:30 ~ 03:29)</option>
-                    <option value="04:30">인시 (03:30 ~ 05:29)</option>
-                    <option value="06:30">묘시 (05:30 ~ 07:29)</option>
-                    <option value="08:30" selected>진시 (07:30 ~ 09:29)</option>
-                    <option value="10:30">사시 (09:30 ~ 11:29)</option>
-                    <option value="12:30">오시 (11:30 ~ 13:29)</option>
-                    <option value="14:30">미시 (13:30 ~ 15:29)</option>
-                    <option value="16:30">신시 (15:30 ~ 17:29)</option>
-                    <option value="18:30">유시 (17:30 ~ 19:29)</option>
-                    <option value="20:30">술시 (19:30 ~ 21:29)</option>
-                    <option value="22:30">해시 (21:30 ~ 23:29)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>현재 연애상태</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="relationship" value="솔로" checked> <span>솔로</span></label>
-                    <label><input type="radio" name="relationship" value="연애중"> <span>연애중</span></label>
-                    <label><input type="radio" name="relationship" value="기혼"> <span>기혼</span></label>
-                    <label><input type="radio" name="relationship" value="이혼"> <span>이혼</span></label>
-                    <label><input type="radio" name="relationship" value="돌싱"> <span>돌싱</span></label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>현재 고민</label>
-                <textarea id="concern" placeholder="고민을 적어주시면 AI가 사주에 맞춰 조언해 드립니다." required></textarea>
-            </div>
-
+            <div class="form-group"><label>이름</label><input type="text" id="name" placeholder="이름을 입력하세요" required></div>
+            <div class="form-group"><label>성별</label><div class="radio-group"><label><input type="radio" name="gender" value="m" checked> <span>남성</span></label><label><input type="radio" name="gender" value="f"> <span>여성</span></label></div></div>
+            <div class="form-group"><label>달력 구분</label><div class="radio-group"><label><input type="radio" name="calendar" value="solar" checked> <span>양력</span></label><label><input type="radio" name="calendar" value="lunar"> <span>음력</span></label><label><input type="radio" name="calendar" value="leap"> <span>윤달</span></label></div></div>
+            <div class="form-group"><label>생년월일</label><div class="date-inputs"><input type="number" id="birth-year" placeholder="1995" required> <span>년</span><input type="number" id="birth-month" placeholder="3" min="1" max="12" required> <span>월</span><input type="number" id="birth-day" placeholder="1" min="1" max="31" required> <span>일</span></div></div>
+            <div class="form-group"><label>태어난 시간</label><select id="birth-time" required><option value="unknown">시간 모름</option><option value="00:30">자시 (23:30 ~ 01:29)</option><option value="02:30">축시 (01:30 ~ 03:29)</option><option value="04:30">인시 (03:30 ~ 05:29)</option><option value="06:30">묘시 (05:30 ~ 07:29)</option><option value="08:30" selected>진시 (07:30 ~ 09:29)</option><option value="10:30">사시 (09:30 ~ 11:29)</option><option value="12:30">오시 (11:30 ~ 13:29)</option><option value="14:30">미시 (13:30 ~ 15:29)</option><option value="16:30">신시 (15:30 ~ 17:29)</option><option value="18:30">유시 (17:30 ~ 19:29)</option><option value="20:30">술시 (19:30 ~ 21:29)</option><option value="22:30">해시 (21:30 ~ 23:29)</option></select></div>
+            <div class="form-group"><label>현재 연애상태</label><div class="radio-group"><label><input type="radio" name="relationship" value="솔로" checked> <span>솔로</span></label><label><input type="radio" name="relationship" value="연애중"> <span>연애중</span></label><label><input type="radio" name="relationship" value="기혼"> <span>기혼</span></label><label><input type="radio" name="relationship" value="이혼"> <span>이혼</span></label><label><input type="radio" name="relationship" value="돌싱"> <span>돌싱</span></label></div></div>
+            <div class="form-group"><label>현재 고민</label><textarea id="concern" placeholder="고민을 적어주시면 AI가 사주에 맞춰 조언해 드립니다." required></textarea></div>
             <button type="submit" class="submit-btn">무료 사주풀이</button>
         </form>
     </div>
-
-    <div id="loading-screen">
-        <h1 id="loading-msg" style="font-size: 20px;">만세력을 짚어보는 중...</h1>
-        <div class="spinner"></div>
-    </div>
-
-    <div id="result-screen">
-        <h1 style="font-size: 22px;"><span id="result-name">OOO</span>님의 명식</h1>
-        <div class="saju-frame">
-            <div class="saju-grid">
-                <div class="grid-cell row-header"></div>
-                <div class="grid-cell col-header">시주</div>
-                <div class="grid-cell col-header">일주</div>
-                <div class="grid-cell col-header">월주</div>
-                <div class="grid-cell col-header">년주</div>
-                <div class="grid-cell row-header">십성</div>
-                <div id="t-ss" class="grid-cell shipseong-cell"></div>
-                <div id="d-ss" class="grid-cell shipseong-cell">일간</div>
-                <div id="m-ss" class="grid-cell shipseong-cell"></div>
-                <div id="y-ss" class="grid-cell shipseong-cell"></div>
-                <div class="grid-cell row-header">천간</div>
-                <div id="t-stem" class="grid-cell"></div>
-                <div id="d-stem" class="grid-cell"></div>
-                <div id="m-stem" class="grid-cell"></div>
-                <div id="y-stem" class="grid-cell"></div>
-                <div class="grid-cell row-header">지지</div>
-                <div id="t-branch" class="grid-cell"></div>
-                <div id="d-branch" class="grid-cell"></div>
-                <div id="m-branch" class="grid-cell"></div>
-                <div id="y-branch" class="grid-cell"></div>
-                <div class="grid-cell row-header">십성</div>
-                <div id="t-bss" class="grid-cell shipseong-cell"></div>
-                <div id="d-bss" class="grid-cell shipseong-cell"></div>
-                <div id="m-bss" class="grid-cell shipseong-cell"></div>
-                <div id="y-bss" class="grid-cell shipseong-cell"></div>
-            </div>
-        </div>
-
+    <div id="loading-screen"><h1 id="loading-msg" style="font-size: 20px;">만세력을 짚어보는 중...</h1><div class="spinner"></div></div>
+    <div id="result-screen"><h1 style="font-size: 22px;"><span id="result-name">OOO</span>님의 명식</h1><div class="saju-frame"><div class="saju-grid"><div class="grid-cell row-header"></div><div class="grid-cell col-header">시주</div><div class="grid-cell col-header">일주</div><div class="grid-cell col-header">월주</div><div class="grid-cell col-header">년주</div><div class="grid-cell row-header">십성</div><div id="t-ss" class="grid-cell shipseong-cell"></div><div id="d-ss" class="grid-cell shipseong-cell">일간</div><div id="m-ss" class="grid-cell shipseong-cell"></div><div id="y-ss" class="grid-cell shipseong-cell"></div><div class="grid-cell row-header">천간</div><div id="t-stem" class="grid-cell"></div><div id="d-stem" class="grid-cell"></div><div id="m-stem" class="grid-cell"></div><div id="y-stem" class="grid-cell"></div><div class="grid-cell row-header">지지</div><div id="t-branch" class="grid-cell"></div><div id="d-branch" class="grid-cell"></div><div id="m-branch" class="grid-cell"></div><div id="y-branch" class="grid-cell"></div><div class="grid-cell row-header">십성</div><div id="t-bss" class="grid-cell shipseong-cell"></div><div id="d-bss" class="grid-cell shipseong-cell"></div><div id="m-bss" class="grid-cell shipseong-cell"></div><div id="y-bss" class="grid-cell shipseong-cell"></div></div></div>
         <div class="reading-container">
-            <div class="reading-section">
-                <h3>성향과 기질</h3>
-                <div class="reading-text" id="text-nature"></div>
-            </div>
-            <div class="reading-section">
-                <h3>장점과 단점</h3>
-                <div class="reading-text" id="text-pros-cons"></div>
-            </div>
-            <div class="reading-section">
-                <h3>2026년 총운</h3>
-                <div class="reading-text" id="text-2026"></div>
-            </div>
-            <div class="reading-section" style="border: 2px solid #e5e0d8; background-color: #fdfbf7;">
-                <h3>해담의 명리 조언</h3>
-                <div class="reading-text" id="text-advice"></div>
-            </div>
+            <div class="reading-section"><h3>성향과 기질</h3><div class="reading-text" id="text-nature"></div></div>
+            <div class="reading-section"><h3>장점과 단점</h3><div class="reading-text" id="text-pros-cons"></div></div>
+            <div class="reading-section"><h3>2026년 총운</h3><div class="reading-text" id="text-2026"></div></div>
+            <div class="reading-section" style="border: 2px solid #e5e0d8; background-color: #fdfbf7;"><h3>해담의 명리 조언</h3><div class="reading-text" id="text-advice"></div></div>
         </div>
         <button type="button" class="cta-btn" onclick="alert('서비스 준비중입니다!')">자세한 상담 받아보기(준비중)</button>
-        <button type="button" onclick="location.reload()" style="background:none; border:none; color:#888; text-decoration:underline; margin-top:20px; font-family:'Gowun Batang';">다시하기</button>
+        <button type="button" onclick="location.reload()" style="background:none; border:none; color:#888; text-decoration:underline; margin-top:20px; font-family:'Gowun Batang'; cursor:pointer;">다시하기</button>
     </div>
 </div>
-
 <script>
-    const ohaengMap = {
-        '甲': { hg: '갑', el: '목', type: '+목', class: 'wood' }, '乙': { hg: '을', el: '목', type: '-목', class: 'wood' },
-        '丙': { hg: '병', el: '화', type: '+화', class: 'fire' }, '丁': { hg: '정', el: '화', type: '-화', class: 'fire' },
-        '戊': { hg: '무', el: '토', type: '+토', class: 'earth' }, '己': { hg: '기', el: '토', type: '-토', class: 'earth' },
-        '庚': { hg: '경', el: '금', type: '+금', class: 'metal' }, '辛': { hg: '신', el: '금', type: '-금', class: 'metal' },
-        '壬': { hg: '임', el: '수', type: '+수', class: 'water' }, '癸': { hg: '계', el: '수', type: '-수', class: 'water' },
-        '子': { hg: '자', el: '수', type: '-수', class: 'water' }, '丑': { hg: '축', el: '토', type: '-토', class: 'earth' },
-        '寅': { hg: '인', el: '목', type: '+목', class: 'wood' }, '卯': { hg: '묘', el: '목', type: '-목', class: 'wood' },
-        '辰': { hg: '진', el: '토', type: '+토', class: 'earth' }, '巳': { hg: '사', el: '화', type: '+화', class: 'fire' },
-        '午': { hg: '오', el: '화', type: '-화', class: 'fire' }, '未': { hg: '미', el: '토', type: '-토', class: 'earth' },
-        '申': { hg: '신', el: '금', type: '+금', class: 'metal' }, '酉': { hg: '유', el: '금', type: '-금', class: 'metal' },
-        '戌': { hg: '술', el: '토', type: '+토', class: 'earth' }, '亥': { hg: '해', el: '수', type: '+수', class: 'water' }
-    };
-
-    function getShipseong(dayStemHanja, targetHanja) {
-        if (!dayStemHanja || !targetHanja || targetHanja === '?') return '';
-        if (dayStemHanja === targetHanja) return '비견';
-        const me = ohaengMap[dayStemHanja], target = ohaengMap[targetHanja];
-        if (!me || !target) return '';
-        const elements = { '목': 0, '화': 1, '토': 2, '금': 3, '수': 4 };
-        const diff = (elements[target.el] - elements[me.el] + 5) % 5;
-        const isSame = (me.type.charAt(0) === target.type.charAt(0));
-        const map = { 0: isSame ? '비견' : '겁재', 1: isSame ? '식신' : '상관', 2: isSame ? '편재' : '정재', 3: isSame ? '편관' : '정관', 4: isSame ? '편인' : '정인' };
-        return map[diff];
-    }
-
-    function renderChar(hanja) {
-        if (!hanja || hanja === '?' || !ohaengMap[hanja]) return `<div class="char-container unknown"><span class="neon-hangul">?</span></div>`;
-        const data = ohaengMap[hanja];
-        return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`;
-    }
-
+    const ohaengMap = { '甲': { hg: '갑', el: '목', type: '+목', class: 'wood' }, '乙': { hg: '을', el: '목', type: '-목', class: 'wood' }, '丙': { hg: '병', el: '화', type: '+화', class: 'fire' }, '丁': { hg: '정', el: '화', type: '-화', class: 'fire' }, '戊': { hg: '무', el: '토', type: '+토', class: 'earth' }, '己': { hg: '기', el: '토', type: '-토', class: 'earth' }, '庚': { hg: '경', el: '금', type: '+금', class: 'metal' }, '辛': { hg: '신', el: '금', type: '-금', class: 'metal' }, '壬': { hg: '임', el: '수', type: '+수', class: 'water' }, '癸': { hg: '계', el: '수', type: '-수', class: 'water' }, '子': { hg: '자', el: '수', type: '-수', class: 'water' }, '丑': { hg: '축', el: '토', type: '-토', class: 'earth' }, '寅': { hg: '인', el: '목', type: '+목', class: 'wood' }, '卯': { hg: '묘', el: '목', type: '-목', class: 'wood' }, '辰': { hg: '진', el: '토', type: '+토', class: 'earth' }, '巳': { hg: '사', el: '화', type: '+화', class: 'fire' }, '午': { hg: '오', el: '화', type: '-화', class: 'fire' }, '未': { hg: '미', el: '토', type: '-토', class: 'earth' }, '申': { hg: '신', el: '금', type: '+금', class: 'metal' }, '酉': { hg: '유', el: '금', type: '-금', class: 'metal' }, '戌': { hg: '술', el: '토', type: '+토', class: 'earth' }, '亥': { hg: '해', el: '수', type: '+수', class: 'water' } };
+    function getShipseong(dsh, th) { if (!dsh || !th || th === '?') return ''; if (dsh === th) return '비견'; const me = ohaengMap[dsh], target = ohaengMap[th]; if (!me || !target) return ''; const els = { '목': 0, '화': 1, '토': 2, '금': 3, '수': 4 }; const diff = (els[target.el] - els[me.el] + 5) % 5; const isSame = (me.type.charAt(0) === target.type.charAt(0)); const map = { 0: isSame ? '비견' : '겁재', 1: isSame ? '식신' : '상관', 2: isSame ? '편재' : '정재', 3: isSame ? '편관' : '정관', 4: isSame ? '편인' : '정인' }; return map[diff]; }
+    function renderChar(hanja) { if (!hanja || hanja === '?' || !ohaengMap[hanja]) return `<div class="char-container unknown"><span class="neon-hangul">?</span></div>`; const data = ohaengMap[hanja]; return `<div class="char-container ${data.class}"><span class="neon-hangul">${data.hg}</span><div class="sub-info"><span>${hanja}</span><span>${data.type}</span></div></div>`; }
     async function fetchRealSajuReading(name, dayStem, relationship, concern, sajuData) {
         try {
             document.getElementById('loading-msg').textContent = "AI가 명식을 분석 중입니다...";
@@ -277,55 +92,52 @@
             });
             if (!response.ok) throw new Error('서버 응답 오류');
             const aiResult = await response.json();
-            document.getElementById('text-nature').innerHTML = aiResult.nature;
-            document.getElementById('text-pros-cons').innerHTML = aiResult.pros_cons;
-            document.getElementById('text-2026').innerHTML = aiResult.fortune_2026;
-            document.getElementById('text-advice').innerHTML = aiResult.advice;
+            document.getElementById('text-nature').innerText = aiResult.nature;
+            document.getElementById('text-pros-cons').innerText = aiResult.pros_cons;
+            document.getElementById('text-2026').innerText = aiResult.fortune_2026;
+            document.getElementById('text-advice').innerText = aiResult.advice;
             document.getElementById('loading-screen').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         } catch (error) {
             console.error(error);
-            alert('문제가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+            alert('AI 분석 중 문제가 발생했습니다. (버셀 환경변수 설정을 확인해 보세요.)');
             location.reload();
         }
     }
-
     document.getElementById('saju-form').addEventListener('submit', function(e) {
         e.preventDefault();
         const name = document.getElementById('name').value;
-        const dob = `${document.getElementById('birth-year').value}-${document.getElementById('birth-month').value.padStart(2, '0')}-${document.getElementById('birth-day').value.padStart(2, '0')}`;
+        const y = document.getElementById('birth-year').value;
+        const m = document.getElementById('birth-month').value.padStart(2, '0');
+        const d = document.getElementById('birth-day').value.padStart(2, '0');
         const time = document.getElementById('birth-time').value;
         const calendar = document.querySelector('input[name="calendar"]:checked').value;
         const relationship = document.querySelector('input[name="relationship"]:checked').value;
         const concern = document.getElementById('concern').value;
         document.getElementById('input-screen').style.display = 'none';
         document.getElementById('loading-screen').style.display = 'block';
-        window.scrollTo(0,0);
-        
         const calcTime = time === 'unknown' ? '12:00' : time;
-        let inputDate = new Date(`${dob}T${calcTime}:00`);
+        let inputDate = new Date(`${y}-${m}-${d}T${calcTime}:00`);
         if (time !== 'unknown') inputDate.setMinutes(inputDate.getMinutes() - 30);
-        const [y, m, d, h, min] = [inputDate.getFullYear(), inputDate.getMonth() + 1, inputDate.getDate(), inputDate.getHours(), inputDate.getMinutes()];
-        
         try {
-            const bazi = calendar === 'solar' ? Solar.fromYmdHms(y, m, d, h, min, 0).getLunar().getEightChar() : Lunar.fromYmdHms(y, calendar === 'leap' ? -m : m, d, h, min, 0).getEightChar();
-            const [yearH, monthH, dayH] = [bazi.getYear(), bazi.getMonth(), bazi.getDay()];
-            const timeH = time === 'unknown' ? ['?', '?'] : bazi.getTime();
-            const dayStem = dayH[0];
+            const bazi = calendar === 'solar' ? Solar.fromYmdHms(inputDate.getFullYear(), inputDate.getMonth() + 1, inputDate.getDate(), inputDate.getHours(), inputDate.getMinutes(), 0).getLunar().getEightChar() : Lunar.fromYmdHms(inputDate.getFullYear(), calendar === 'leap' ? -(inputDate.getMonth() + 1) : (inputDate.getMonth() + 1), inputDate.getDate(), inputDate.getHours(), inputDate.getMinutes(), 0).getEightChar();
+            const [yh, mh, dh] = [bazi.getYear(), bazi.getMonth(), bazi.getDay()];
+            const th = time === 'unknown' ? ['?', '?'] : bazi.getTime();
+            const dStem = dh[0];
             document.getElementById('result-name').textContent = name;
             ['t', 'd', 'm', 'y'].forEach((p, i) => {
-                const ts = [timeH[0], dayStem, monthH[0], yearH[0]][i];
-                const tb = [timeH[1], dayH[1], monthH[1], yearH[1]][i];
-                document.getElementById(`${p}-ss`).textContent = p === 'd' ? '일간' : getShipseong(dayStem, ts);
-                document.getElementById(`${p}-bss`).textContent = getShipseong(dayStem, tb);
+                const ts = [th[0], dStem, mh[0], yh[0]][i];
+                const tb = [th[1], dh[1], mh[1], yh[1]][i];
+                document.getElementById(`${p}-ss`).textContent = p === 'd' ? '일간' : getShipseong(dStem, ts);
+                document.getElementById(`${p}-bss`).textContent = getShipseong(dStem, tb);
                 document.getElementById(`${p}-stem`).innerHTML = renderChar(ts);
                 document.getElementById(`${p}-branch`).innerHTML = renderChar(tb);
             });
-            const timeStr = typeof timeH === 'string' ? timeH : timeH.join('');
-            fetchRealSajuReading(name, dayStem, relationship, concern, { year: yearH, month: monthH, day: dayH, time: timeStr });
-        } catch (error) { 
-            alert('오류가 발생했습니다.'); 
+            fetchRealSajuReading(name, dStem, relationship, concern, { year: yh, month: mh, day: dh, time: th.join('') });
+        } catch (err) {
+            console.error(err);
+            alert('계산 중 오류가 발생했습니다.');
             location.reload();
         }
     });
